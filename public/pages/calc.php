@@ -1,16 +1,22 @@
 <?php
+
+
 function isValidValue(string $val): bool {
     $numberKeys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
-    $operationKeys = ["√", "÷", "×", "-", "+", "="];
-    $controlKeys = ["C", "Del"];
-    $allowedKeys = [...$numberKeys, ...$operationKeys, ...$controlKeys];
+    $operationKeys = ["√", "%", "÷", "×", "-", "+"];
+    $allowedKeys = [...$numberKeys, ...$operationKeys];
     return in_array($val, $allowedKeys, true);
 }
 
-$expression = $_POST['expression'] ?? '';
+function isOperationKey(string $val): bool {
+    $operationKeys = ["√", "%", "÷", "×", "-", "+"];
+    return in_array($val, $operationKeys, true);
+}
+
+$expression = $_POST['expression'] ?? '0';
 $key = $_POST['key'] ?? null;
 if ($key === 'C') {
-    $expression = '';
+    $expression = '0';
 } elseif ($key === 'Del') {
     $expression = mb_substr($expression, 0, -1);
 } elseif ($key === '=') {
@@ -28,7 +34,16 @@ if ($key === 'C') {
         
     }
 } elseif ($key !== null) {
-    $expression .= $key;
+    if ($expression === "0" && ctype_digit($key)) {
+        $expression = $key;
+    } else {
+        if (isOperationKey($key) && isOperationKey(mb_substr($expression, -1))) {
+            $expression = mb_substr($expression, 0, -1) . $key;
+        }
+        else {
+            $expression .= $key;
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
