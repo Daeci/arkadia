@@ -20,19 +20,7 @@ if ($key === 'C') {
 } elseif ($key === 'Del') {
     $expression = mb_substr($expression, 0, -1);
 } elseif ($key === '=') {
-    
-    $answer = 0;
-    for ($i = 0; $i < mb_strlen($expression); $i++) {
-        $val = mb_substr($expression, $i, 1);
-        
-        // check for valid input, early return with error code on any invalid input found
-        if (!isValidValue($val)) {
-            $expression = 'INVALID INPUT';
-            break;
-        }
-
-        
-    }
+    //TBD
 } elseif ($key !== null) {
     if ($expression === "0" && ctype_digit($key)) {
         $expression = $key;
